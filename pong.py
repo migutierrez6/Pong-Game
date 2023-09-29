@@ -176,8 +176,10 @@ def main():
         won = False
         if left_Score >= WINNING_SCORE:
             won = True
+            win_text = " Left player won!"
         elif right_Score >= WINNING_SCORE:
             won = True
+            win_text = " Right player won!"
 
         if won:
             left_paddle.reset()
