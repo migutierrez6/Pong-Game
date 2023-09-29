@@ -16,7 +16,7 @@ PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
 class Paddle:
     
     COLOR = WHITE
-    
+    VEL = 4
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -26,9 +26,15 @@ class Paddle:
     # draw the paddle
     def draw(self, win):
         # draw the paddle 
-        pygame.draw.rectangle(win, self.COLOR, (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(win, self.COLOR, (self.x, self.y, self.width, self.height))
     
-    
+
+    def move(self, up=True):
+        if up:
+            self.y -= self.VEL
+        else:
+            self.y += self.VEL
+
 def draw(win, paddles):
     win.fill(BLACK)
     
@@ -37,14 +43,30 @@ def draw(win, paddles):
     
     pygame.display.update()
     
+def handle_paddle_movement(keys, left_paddle, right_paddle):
+    #Left paddle movement with W & S
+    if keys[pygame.K_w] and left_paddle.y - left_paddle.VEL >= 0:
+        left_paddle.move(up=True)
+    if keys[pygame.K_s] and left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT:
+        left_paddle.move(up=False)
+
+    #right paddle movement with Arrows
+    if keys[pygame.K_UP] and right_paddle.y - right_paddle.VEL >= 0:
+        right_paddle.move(up=True)
+    if keys[pygame.K_DOWN] and right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT:
+        right_paddle.move(up=False)
+
+
 
 def main():
     run = True
     
     #regulate framerate of game
     clock = pygame.time.Clock()
+
     # heigth divided by 2 and the height of the paddle divided by two to get the starting point for the drawing 
     left_paddle = Paddle(10, HEIGHT//2 - PADDLE_HEIGHT//2, PADDLE_WIDTH, PADDLE_HEIGHT)
+    # substract the margin + the paddle width to know where to start drawing
     right_paddle = Paddle(WIDTH - 10 - PADDLE_WIDTH, HEIGHT//2 - PADDLE_HEIGHT//2, PADDLE_WIDTH, PADDLE_HEIGHT)
 
     while run:
@@ -56,6 +78,8 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 break
+        keys = pygame.key.get_pressed()
+        handle_paddle_movement(keys, left_paddle, right_paddle)
     pygame.quit()
 
 
