@@ -176,15 +176,21 @@ def main():
         won = False
         if left_Score >= WINNING_SCORE:
             won = True
-            win_text = " Left player won!"
+            win_text = "Left player won!"
         elif right_Score >= WINNING_SCORE:
             won = True
-            win_text = " Right player won!"
+            win_text = "Right player won!"
 
         if won:
+            text = SCORE_FONT.render(win_text, 1, WHITE)
+            WIN.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//2 - text.get_height()//2))
+            pygame.display.update()
+            pygame.time.delay(5000)
             left_paddle.reset()
             right_paddle.reset()
             ball.reset()
+            left_Score = 0
+            right_Score = 0
 
 
     pygame.quit()
